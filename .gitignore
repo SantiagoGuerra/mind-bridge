@@ -1,0 +1,7 @@
+# macOS metadata
+.DS_Store
+._*
+__MACOSX/
+
+# Stale build artifacts (publish binaries via GitHub Releases instead)
+dist/
