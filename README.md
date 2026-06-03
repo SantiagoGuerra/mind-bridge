@@ -40,21 +40,19 @@ At the end you get a **concept package**: a short, plain summary of the idea tha
 
 ## What a concept package looks like
 
-A concept package is what stays in your head a week later, once you really understand something. The skill gives it a fixed shape so it stays useful. Here is one for a simple idea most people already know:
+A concept package is what stays in your head a week later, once you really understand something. It always has the same parts, so nothing important slips through. Here is one for an idea most people already know:
 
-```
-CONCEPT          Diminishing returns
-CENTRAL PATTERN  Past a point, each extra hour of effort buys less than the hour before it.
-PROBLEM          You keep pouring time into something long after it stopped paying off.
-MECHANISM        The cheap, high-impact gains get used up first. What's left costs more, returns less.
-EXAMPLE          Studying for an exam. The first three hours move your grade a lot. The tenth barely does.
-COUNTER-EXAMPLE  It doesn't hold when effort compounds. An instrument pays off slowly at first, then more.
-USE              Deciding when "good enough" really is enough, so you can stop.
-30-SEC PITCH     "Effort and results aren't a straight trade. Early effort pays off big. Later effort
-                 pays off less. The trick is noticing when you've crossed into the 'less' part, and stopping."
-```
+> **Diminishing returns**
+>
+> - **The idea:** past a point, each extra hour of effort buys less than the hour before it.
+> - **The problem it solves:** you keep pouring time into something long after it stopped paying off.
+> - **Why it works:** the cheap, high-impact gains get used up first, so what's left costs more and gives back less.
+> - **An example:** studying for an exam. The first three hours move your grade a lot. The tenth barely moves it.
+> - **Where it breaks:** when effort compounds. An instrument pays off slowly at first, then more and more.
+> - **When to reach for it:** deciding whether "good enough" is actually enough, so you can stop.
+> - **In one breath:** "Effort and results aren't a straight trade. Early effort pays off big, later effort pays off less. The trick is noticing when you've crossed into the 'less' part, and stopping."
 
-The counter-example carries as much weight as the example. Knowing where an idea stops applying is often how you find out whether you really understand it.
+Notice the "where it breaks" line. Knowing where an idea stops applying is often how you find out whether you really understand it.
 
 The package is the start, not the finish. With it in hand you can keep practicing: run exercises, try new examples, and ask the skill to test you again, until the idea really sticks.
 
@@ -84,7 +82,7 @@ When what you want to learn is large, a textbook, a dense paper, a whole course,
 - An **ordered list of concept packages**, each one a piece you can learn on its own. They're numbered P1, P2, P3, and so on.
 - For each package, a short note on what to read closely, what to skim, and what to skip.
 
-It teaches the first package in full and leaves the rest folded up, so you're never buried.
+When the plan is large, it doesn't start teaching right away. It hands you the plan, suggests saving it, and recommends learning one package at a time, each in its own session. The workflow below shows how.
 
 ### A workflow that works well
 
@@ -194,7 +192,7 @@ It works in two languages. It replies in whatever language you write in, and it 
 
 ## Status
 
-mind-bridge is at **v1.1.0**: stable, and tested.
+mind-bridge is at **v1.2.0**: stable, and tested.
 
 ---
 

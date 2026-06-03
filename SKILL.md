@@ -135,6 +135,8 @@ P2 — Name
 
 Applies to any mode that produces a set of packages (Modes 1, 7, 10, 12, 13, 14).
 
+**Very large roadmaps (whole book/course, or roughly 10+ packages / 5 phases)**: do **not** auto-open P1. Hand over the roadmap, then recommend the user save it (to a `.md` file or PDF) and install one package per session, opening each in a fresh session (`open P1`, then `open P2`, ...). One package per session keeps each focused and easier to remember. Small and medium roadmaps still expand P1 in the initial response.
+
 ## Success criterion (mandatory for serious learning)
 
 When the user is learning something advanced or for product/implementation/communication:

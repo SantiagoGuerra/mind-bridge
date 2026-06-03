@@ -18,6 +18,24 @@ Older entries below describe the state at the time. Refer to this section if a n
 
 ---
 
+## v1.2.0 — Softer package presentation + large-roadmap handling (2026-05-29)
+
+Refinements after the first public release. No change to the concept-package schema or the mode router.
+
+### Changed
+- **README: the example concept package now reads as a card, not a rigid aligned key-value block.** Same underlying parts (idea / problem / mechanism / example / where it breaks / use / 30-second version), friendlier to read.
+- **Very large roadmaps no longer auto-expand P1.** For a whole book or course, or roughly 10+ packages / 5 phases, the skill hands over the roadmap and recommends saving it (to a `.md` file or PDF) and installing one package per session (`open P1`, then `open P2`, ...). Small and medium roadmaps still expand P1 as before. Updated `SKILL.md`, `modes/ingest.md`, and `templates/learning-roadmap.md`.
+
+### Why
+- The aligned key-value example read as stiff to first-time readers.
+- Dropping a full first lesson on top of a large roadmap is overwhelming. Saving the plan and learning one package per session keeps each one focused and easier to remember.
+
+### Verified
+- `scripts/lint.sh`: PASS.
+- `scripts/release.sh`: PASS.
+
+---
+
 ## v1.1.0 — English translation + frontmatter key rename (2026-05-28)
 
 The entire skill — all 14 modes, templates, examples, `README.md` / `SKILL.md` / `PHILOSOPHY.md`, this changelog, and the test suite — was translated to English so it reads cleanly for an international audience. The skill stays **functionally bilingual**: it still activates on Spanish triggers, still follows the "respond in the user's language" rule, and `PHILOSOPHY.md` keeps its canonical Spanish phrases. No methodology, mode, router, or behavior changes.

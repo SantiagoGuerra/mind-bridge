@@ -80,7 +80,7 @@ Criteria to evaluate:
 
 **B. Medium magnitude / Cluster** — 2–7 related concepts. **Output**: package map + relations + expanded main package + compressed secondary ones.
 
-**C. High magnitude / Roadmap** — 8+ concepts, long content, dependencies, multiple abstraction layers. **Output**: roadmap by phases (`templates/learning-roadmap.md`). Expand only P1.
+**C. High magnitude / Roadmap** — 8+ concepts, long content, dependencies, multiple abstraction layers. **Output**: roadmap by phases (`templates/learning-roadmap.md`). Expand only P1. **For a very large roadmap** (a whole book or course, or roughly 10+ packages / 5 phases): expand nothing. Hand over the roadmap and recommend the user save it (to a `.md` file or PDF) and install one package per session (`open P1`, then `open P2`, ...).
 
 ### Quick heuristic
 
@@ -126,7 +126,7 @@ The user can ask to change the decision.
 
 - **Single package** (low magnitude): use the long format from `templates/concept-package.md`. Close with short validation. ID: P1.
 - **Package map** (medium magnitude): expand P1 short, secondary ones compressed (1 line), explicit relations, learning order. IDs P1..Pn.
-- **Full roadmap** (high magnitude + acquisition + completeness OK): load `templates/learning-roadmap.md`. Only P1 expanded. Compact mode by default if the user doesn't ask for depth.
+- **Full roadmap** (high magnitude + acquisition + completeness OK): load `templates/learning-roadmap.md`. Only P1 expanded. Compact mode by default if the user doesn't ask for depth. For a **very large** roadmap (whole book/course or ~10+ packages), expand none and recommend saving the roadmap plus one package per session.
 - **Scoped roadmap** (high magnitude + completeness partial): same structure, title says `SCOPED ROADMAP`, each phase declares what's in/out. See `templates/learning-roadmap.md` "Rules".
 - **Diagnostic only** (acquisition fail OR completeness incomplete + scoped not applicable): questions to complete the source, no roadmap.
 
@@ -134,7 +134,7 @@ The user can ask to change the decision.
 
 ### Anti-overwhelm
 
-> "Do not try to install all the long content in a single response. For large content, first create the roadmap and only expand the first package or the most important one. Leave the rest compressed."
+> "Do not try to install all the long content in a single response. For large content, first create the roadmap and only expand the first package or the most important one. Leave the rest compressed. For a very large roadmap (a whole book or course, or roughly 10+ packages), expand nothing: hand over the roadmap, recommend saving it (to a `.md` file or PDF), and tell the user to install one package per session (`open P1`, then `open P2`, ...)."
 
 ### Anti-summary
 

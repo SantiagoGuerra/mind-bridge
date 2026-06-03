@@ -134,13 +134,22 @@ OPTIONAL PACKAGES:
   [List of IDs: P9, P10, ...] — only if the user wants to implement, debate, or teach.
 
 FIRST PACKAGE TO INSTALL NOW (P1):
-  [Expand ONLY this package with the long format from templates/concept-package.md.]
+  [Small / medium roadmap: expand ONLY this package with the long format
+   from templates/concept-package.md.]
+  [Very large roadmap (a whole book/course, or ~10+ packages): expand NOTHING here.
+   Instead recommend saving the roadmap and learning one package per session —
+   see "HOW TO CONTINUE FROM HERE".]
 
 HOW TO CONTINUE FROM HERE:
-  Maximum 3 options, expressed as a concrete action:
+  Maximum 3 options, expressed as a concrete action. Pick the set that matches the roadmap size.
+  Small / medium roadmap:
   1. Install the first package (expand now).
   2. Validate whether I already have the current phase installed.
   3. Reorder the roadmap according to my product / specific context.
+  Very large roadmap (recommended):
+  1. Save this roadmap to a .md file or PDF.
+  2. Open a fresh session per package and run `open P1`, then `open P2`, ...
+  3. Validate each package before moving to the next.
 ```
 
 **ASCII values are canonical for stored level fields** (`recognize / explain / apply / implement / teach`). Spanish display labels for human-facing output: `Reconocer / Explicar / Aplicar / Implementar / Enseñar`. Mapping is direct and stable. See `templates/library-entry.md` for the full schema.
@@ -156,13 +165,13 @@ HOW TO CONTINUE FROM HERE:
 - **DOUBLE-CHECK is mandatory if websearch was performed.** Activated by default with the Implementation modifier and for specific technical claims.
 - **ROADMAP USAGE METHODOLOGY is mandatory.** Without that section, the output feels like phases without guidance and the user doesn't know how to start.
 - **HOW TO CONTINUE FROM HERE is mandatory** and limited to a maximum of 3 options. More than 3 = another form of saturation.
-- **Do not expand more than the first package (P1)** in the initial response. The rest stays compressed. Exception: if the user asked for "roadmap only, no expansion", expand none.
+- **Do not expand more than the first package (P1)** in the initial response. The rest stays compressed. Exception: if the user asked for "roadmap only, no expansion", expand none. **Exception for very large roadmaps** (a whole book or course, or roughly 10+ packages / 5 phases): expand none. Instead, recommend the user save the roadmap (to a `.md` file or PDF) and install one package per session, opening each in a fresh session (`open P1`, then `open P2`, ...). Auto-expanding P1 is only for small and medium roadmaps.
 - **Stable IDs**: all packages carry IDs P1, P2, P3..., global numbering across all phases (do not restart per phase). The user can ask "open P4", "validate P2", "serialize P1 for meeting", "expand P7 to implement level", "reorder P3 by my product".
 - The 5 phases **are not all mandatory**. Use only those the content requires. If there are only 3 natural phases, do not invent 2 more.
 - "Conceptual core" (typically Phase 2) must always be present. The others are optional depending on content.
 - Package names in the roadmap are **short and memorable**. Full expansion goes through Mode 1 or Mode 2.
 - Always mark **provenance** (source / inference / translation / doubt) in each expanded package.
-- The `open now: yes` flag must appear exactly once in the initial roadmap — on the first package of Phase 1 (P1). Everything else: `open now: no`.
+- The `open now: yes` flag appears exactly once in the initial roadmap, on the first package of Phase 1 (P1). Everything else: `open now: no`. For very large roadmaps (see exception above), no package is `open now: yes`: every package is `open now: no`, because the user opens them one per session.
 - If the target level is low (recognize / explain), aggressively reduce optional packages.
 - If the level is high (implement / teach), expand Phases 4 and 5 with more packages and end each phase with a practical decision, tradeoff, risk, or explicit technical artifact.
 
