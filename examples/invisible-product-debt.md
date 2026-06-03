@@ -20,46 +20,27 @@ This concept **has no consolidated standard term** in product literature. It sta
 
 ## Long package
 
-```
-CONCEPT: Invisible product debt (provisional name — no consolidated standard term found)
+> **Invisible product debt** *(provisional name, no consolidated standard term found)*
+>
+> **The idea:** decisions that seem free today but quietly erode how fast you can change the product, with no measurable symptoms in the short term.
+>
+> **The problem it solves:** unlike technical debt (which shows up as bugs, slowness, deploy friction), this kind leaves no clear symptoms. It builds up through optional features, settings that "you can always ignore", secondary paths that look cheap. Each single decision is defensible. The sum erodes your ability to evolve the product.
+>
+> **How it works:** every optional feature or secondary setting multiplies the cases that product, support, and QA have to keep in mind. Even if almost no one uses it, every future change has to preserve its behavior. It becomes an invisible constraint on tomorrow's decisions.
+>
+> **An example:** a team adds a "show X in compact view" toggle because one customer asked. No one else uses it. Three quarters later they try to redesign the view, and every proposal now has to account for the toggle. What looked free weighs on the roadmap indefinitely.
+>
+> **Where it breaks:** it doesn't apply to decisions that do have measurable symptoms (slowness, bugs, infra cost). That is technical or operational debt, not invisible. It also doesn't apply to features most users actually use. Those are core, not secondary settings.
+>
+> **Related:** technical debt (has symptoms, this one doesn't), feature creep (a common cause), accidental complexity (Brooks, *possible literary anchor, verify before publication*), default paths (choosing the normal path reduces this debt), optionality cost from finance (a near cousin, not identical).
+>
+> **When to use it:** in roadmap conversations, when someone weighs adding an option or setting "that barely costs anything". It forces the real question: what invisible weight do we carry after this?
+>
+> **In 30 seconds:** "Invisible product debt is what builds up when you add features or options that seem free today. Each one quietly restricts what you can change tomorrow. It produces no bugs or slowness, it just erodes how fast the product can evolve."
+>
+> *Taught at the explain level, not yet validated (ready-for-validation). Confidence medium: the pattern holds up under sparring, but the term is provisional, and Mode 4 plus a contrast with the literature are still pending.*
 
-CENTRAL PATTERN:
-Decisions that seem free today but invisibly erode product velocity, with no measurable symptoms in the short term.
-
-PROBLEM:
-Unlike technical debt (which produces bugs, slowness, deploy friction), invisible product debt generates no clear symptoms. It accumulates through optional features, configurations that "can always be ignored", secondary paths that seem cheap. Each individual decision is defensible. The sum erodes the ability to evolve the product.
-
-MECHANISM:
-Each optional feature or secondary configuration multiplies the state space that product, support, and QA must consider. Even if most users don't use it, all future changes must preserve the behavior in the presence of that feature. It is an invisible constraint on future decisions.
-
-EXAMPLE:
-A team adds a "show X in compact view" toggle because a customer asked for it. No one else uses it. Three quarters later, the team tries to redesign the view — and discovers that any design proposal must account for the toggle case. What seemed free weighs indefinitely on the roadmap.
-
-COUNTER-EXAMPLE:
-Does not apply to decisions that do have measurable symptoms (slowness, bugs, infra cost). That is technical or operational debt, not invisible. Also does not apply to features the bulk of users actually use — those are "core", not "secondary configuration".
-
-RELATIONS:
-- Technical debt: has symptoms; this one doesn't.
-- Feature creep: one of the most common causes.
-- Accidental complexity (Brooks): conceptual family.
-- Default paths: deciding the "normal path" reduces this type of debt.
-- Optionality cost (finance): analogous family, not identical.
-
-USE:
-In roadmap conversations when discussing whether to add an option or configuration "that barely costs anything". Useful for forcing the question: "what invisible weight are we going to carry after this?"
-
-30-SECOND PITCH:
-Invisible product debt is what accumulates when you add features or options that seem free today. Each one invisibly restricts what you can change tomorrow. It produces no bugs or slowness, only erodes the velocity of product evolution.
-
-TARGET LEVEL: explain
-TAUGHT LEVEL: explain
-VALIDATED LEVEL: pending
-CONFIDENCE: medium (the pattern holds up under sparring, the term is provisional)
-SOURCE: own intuition + analogies from product literature
-ANCHOR WORDS: feature creep, configuration burden, optionality cost, path multiplicity
-NEXT BRANCH: how to measure or detect it in a roadmap review.
-STATE: ready-for-validation (package taught; Mode 4 + contrast with literature still pending)
-```
+Behind the card, the stored entry keeps: `TARGET LEVEL: explain · TAUGHT LEVEL: explain · VALIDATED LEVEL: pending · CONFIDENCE: medium · STATE: ready-for-validation`. Source: own intuition plus analogies from product literature. Anchor words: feature creep, configuration burden, optionality cost, path multiplicity. Next branch: how to measure or detect it in a roadmap review.
 
 ## Critical distinction
 

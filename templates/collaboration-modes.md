@@ -171,45 +171,30 @@ To use when an anti-pattern is detected:
 
 Extension of `templates/concept-package.md` for collaborative outputs:
 
-```
-CONCEPT:
+**[Concept]** (collaborative)
 
-CENTRAL PATTERN:
-  [final version]
-  Provenance: unanimous agreement / proposed by X / decided by majority with dissent from Y / emerged in discussion.
+**The idea:** [final version] *(provenance: unanimous agreement / proposed by X / decided by majority with dissent from Y / emerged in discussion)*
 
-PROBLEM:
-  [...] (Provenance)
+**The problem it solves:** [...] *(provenance)*
 
-MECHANISM:
-  step 1: [...] (Provenance)
-  step 2: [...] (Provenance)
-  ...
+**How it works:**
+- step 1 [...] *(provenance)*
+- step 2 [...] *(provenance)*
+- ...
 
-PRIMARY EXAMPLE:
-  [...] (Provenance: contributed by [Example Maker], chosen for its specificity to the group's context)
+**An example:** [...] *(provenance: contributed by the Example Maker, chosen for fitting the group's context)*
 
-ADDITIONAL EXAMPLES (if they cover distinct relevant domains):
-  - [...]
+**More examples** (only if they cover distinct relevant domains): [...]
 
-COUNTER-EXAMPLE:
-  [...] (Provenance: from the Skeptic round)
+**Where it breaks:** [...] *(provenance: from the Skeptic round)*. And where it doesn't apply at all: [...] *(provenance)*
 
-WHERE IT DOES NOT APPLY:
-  [...] (Provenance)
+**When to use it:** [...] *(group agreement)*
 
-USE:
-  [...] (group agreement)
+**In 30 seconds:** [final version]
 
-30-SECOND PITCH:
-  [final version]
+*Declared weaknesses: a Skeptic attack the group could not answer with confidence.*
 
-DECLARED WEAKNESSES:
-  - [Skeptic attack the group could not answer with confidence]
-
-PENDING DECISIONS:
-  - [differences that require reading a source or a decision the group could not close — with owner and date if applicable]
-```
+*Pending decisions: differences that need a source check, or a decision the group couldn't close, with owner and date if applicable.*
 
 ## Bidirectional (Duo) / multidirectional (Group) validation — alignment, not installation
 

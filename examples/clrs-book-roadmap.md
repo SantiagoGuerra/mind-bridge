@@ -346,31 +346,20 @@ OPTIONAL PACKAGES: P13, P14.
 
 ## First package to install now (P1 expanded)
 
-```
-P1. CONCEPT: Asymptotic notation and algorithm analysis
+**P1. Asymptotic notation and algorithm analysis**
 
-CENTRAL PATTERN:
-The cost of an algorithm is measured in how it grows with input size, not in absolute
-seconds. Asymptotic notation (O, Ω, Θ) captures that growth by ignoring constants
-and lower-order terms.
+**The idea:** the cost of an algorithm is how it grows with input size, not absolute seconds. Asymptotic notation (O, Ω, Θ) captures that growth by ignoring constants and lower-order terms.
 
-PROBLEM:
-Without a shared language for talking about cost, discussions about "which algorithm is
-better" collapse into hardware benchmarks or intuition. You can't reason a priori whether a
-change will scale; you can only measure after implementing. For large n, the constants
-that benchmarks do measure are irrelevant compared to the dominant growth term.
+**The problem it solves:** without a shared language for cost, arguments about "which algorithm is better" collapse into hardware benchmarks or intuition. You can't reason a priori about whether a change will scale; you can only measure after building it. And for large n, the constants benchmarks do measure are irrelevant next to the dominant growth term.
 
-MECHANISM:
-1. Identify the dominant operation of the algorithm (the one repeated most).
-2. Count how many times it executes as a function of input size n.
-3. Drop multiplicative constants (they depend on hardware).
-4. Drop lower-order terms (for large n, higher-order terms dominate).
-5. What remains is the asymptotic complexity.
-   - O(f(n)): upper bound. "Grows at most as fast as f(n)."
-   - Ω(f(n)): lower bound. "Grows at least as fast as f(n)."
-   - Θ(f(n)): tight bound. "Grows exactly as fast as f(n)."
+**How it works:** find the dominant operation (the one repeated most), count how many times it runs as a function of n, drop the multiplicative constants (they depend on hardware), and drop the lower-order terms (higher-order terms dominate for large n). What's left is the asymptotic complexity:
 
-EXAMPLE:
+- O(f(n)): upper bound. "Grows at most as fast as f(n)."
+- Ω(f(n)): lower bound. "Grows at least as fast as f(n)."
+- Θ(f(n)): tight bound. "Grows exactly as fast as f(n)."
+
+**An example:**
+
 ```go
 func hasDuplicate(xs []int) bool {
     for i := 0; i < len(xs); i++ {
@@ -383,62 +372,26 @@ func hasDuplicate(xs []int) bool {
     return false
 }
 ```
-- Dominant operation: the comparison `xs[i] == xs[j]`.
-- Number of times: n(n-1)/2 = (n² - n)/2.
-- Drop constant (1/2) and lower-order term (-n/2): n².
-- Time complexity: O(n²).
-- For n = 10⁶: 10¹² operations. Infeasible.
-- Alternative with hash map: O(n). For n = 10⁶: 10⁶ operations. Trivial.
 
-COUNTER-EXAMPLE:
-Asymptotic notation is NOT the best tool when:
-- Input size is bounded by a small constant (n ≤ 100 always). Here constants dominate
-  and a well-optimized O(n²) can beat an O(n log n) with large constants.
-- The bottleneck is not CPU but I/O, network, or cache memory.
-- You're doing hardware-specific benchmarks — there you measure, not derive.
-- Amortized analysis matters: some structures have O(n) worst case but O(1) amortized.
+The dominant operation is the comparison `xs[i] == xs[j]`. It runs n(n-1)/2 = (n² - n)/2 times. Drop the constant (1/2) and the lower-order term (-n/2) and you get n², so O(n²). For n = 10⁶ that's 10¹² operations, infeasible. A hash-map alternative is O(n): 10⁶ operations for n = 10⁶, trivial.
 
-RELATIONS:
-- P2 (Recurrences): asymptotic analysis gets complicated when the algorithm is recursive.
-- Amortized analysis: when the per-operation worst-case cost is misleading.
-- Profiling: asymptotic analysis tells you what will scale; profiling tells you what hurts today.
-- Data structures (Phase 3): the choice of structure determines the complexity of the
-  most-used operations.
+**Where it breaks:** asymptotic notation is not the best tool when input size is bounded by a small constant (n ≤ 100 always), where constants dominate and a tight O(n²) can beat an O(n log n) with large constants; when the bottleneck is I/O, network, or cache rather than CPU; when you're doing hardware-specific benchmarks, where you measure instead of derive; or when amortized analysis matters, since a structure can be O(n) worst case but O(1) amortized.
 
-USE:
-When reviewing a PR and you want an informed opinion before accepting. When designing an
-endpoint that will grow 10x. When estimating whether a migration will finish in hours or days.
+**Related:** P2 (recurrences, where analysis gets harder for recursive algorithms), amortized analysis (when the per-operation worst case misleads), profiling (asymptotics tells you what will scale, profiling tells you what hurts today), and the data structures in Phase 3 (your choice of structure sets the complexity of the most-used operations).
 
-30-SECOND PITCH:
-Asymptotic notation measures how the cost of an algorithm grows with input size,
-ignoring constants and hardware. You count the dominant operation, discard what doesn't
-scale, and you're left with a label like O(n²) or O(n log n). It gives you a language to
-reason a priori about whether a change will scale — before measuring it. It doesn't replace
-profiling when constants, I/O, or cache matter, but it saves you from implementing something
-you already know won't scale.
+**When to use it:** reviewing a PR and wanting an informed opinion before accepting; designing an endpoint that will grow 10x; estimating whether a migration finishes in hours or days.
 
-SOURCE:
-- From the source: formal definition of O, Ω, Θ and the insertion sort exercise come from CLRS
-  (chapter on asymptotic notation + chapter on insertion sort —
-  topic candidates, verify with TOC).
-- Translation: the Go example is from the user (not from the book); CLRS uses neutral pseudocode.
-- Inference: the connection to profiling is not central in CLRS but is practical for your context.
+**In 30 seconds:** "Asymptotic notation measures how an algorithm's cost grows with input size, ignoring constants and hardware. You count the dominant operation, drop what doesn't scale, and you're left with a label like O(n²) or O(n log n). It gives you a language to reason a priori about whether a change will scale, before measuring it. It doesn't replace profiling when constants, I/O, or cache matter, but it saves you from building something you already know won't scale."
 
-TARGET LEVEL: apply
-TAUGHT LEVEL: apply
-VALIDATED LEVEL: pending
-STATE: ready-for-validation
+*Targeted and taught at the apply level, not yet validated (ready-for-validation). Provenance: the formal definitions of O, Ω, Θ and the insertion-sort exercise come from CLRS (asymptotic-notation and insertion-sort chapters, topic candidates, verify with the TOC). The Go example is yours, not the book's (CLRS uses neutral pseudocode). The link to profiling is inference, practical for your context.*
 
-RECOMMENDED READING IN THE ORIGINAL BOOK:
-- Full insertion sort chapter (topic candidate — verify with TOC): introduces the cycle
-  "describe algorithm → analyze cost".
-- Full asymptotic notation chapter (topic candidate — verify with TOC): formally defines O, Ω, Θ.
-  Read the first sections carefully; you can skim the less common notations.
-- Summations appendix (topic candidate — verify with TOC): consult if you encounter a
-  summation you don't know how to bound.
+**Recommended reading in the original book:**
 
-> To map these references to exact chapter/section numbers, paste the CLRS 4th edition TOC.
-```
+- The full insertion-sort chapter (topic candidate, verify with the TOC): introduces the cycle of describing an algorithm and then analyzing its cost.
+- The full asymptotic-notation chapter (topic candidate, verify with the TOC): formally defines O, Ω, Θ. Read the first sections carefully; skim the less common notations.
+- The summations appendix (topic candidate, verify with the TOC): consult if you hit a summation you can't bound.
+
+To map these to exact chapter/section numbers, paste the CLRS 4th edition TOC.
 
 ## How to continue from here
 

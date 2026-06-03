@@ -310,46 +310,29 @@ Justification:
 
 ## First package to install now (P1 expanded — short format, not full)
 
+**P1. DSL: a declarative flow language**
+
+**The idea:** FlowMint uses a declarative DSL to describe pipelines as a composition of operators that end in one or more sinks.
+
+**How it works:** a `.flow` file is parsed into an AST. The AST is evaluated against the engine, producing operations. Those operations run async, channeling data toward the sinks referenced by name.
+
+**An example (from the repository),** `examples/etl_postgres_to_s3.flow`:
+
 ```
-P1 — DSL: declarative flow language
-
-CENTRAL PATTERN:
-  FlowMint uses a declarative DSL to describe pipelines as composition
-  of operators that end in one or more sinks.
-
-MECHANISM:
-  1. A .flow file is parsed into an AST.
-  2. The AST is evaluated against the engine, producing operations.
-  3. Operations are executed async, channeling data toward the sinks
-     referenced by name.
-
-EXAMPLE (from the repository):
-  examples/etl_postgres_to_s3.flow:
-    flow "daily_export" {
-      from postgres("orders") where created_at > yesterday()
-      transform |row| { ... }
-      to s3("archive/$(date).json")
-    }
-
-USE:
-  Every time you want to design a data flow without writing Rust. The DSL
-  is the first thing a new user touches.
-
-COUNTER-EXAMPLE:
-  Does not work for complex imperative logic or for flows with cross-execution
-  state. For those, you would need to drop down to the Rust engine directly.
-
-RELATIONS:
-  - Feeds P2 (Engine).
-  - References P3 (Connectors) by name.
-
-CONFIDENCE: high.
-
-SOURCE:
-  - From the source: parser/ast/evaluator + docs/dsl-spec.md + 8 examples.
-  - Inference: the DSL appears dynamic (no type checker found); confirm.
-  - Open question: behavior on runtime type errors.
+flow "daily_export" {
+  from postgres("orders") where created_at > yesterday()
+  transform |row| { ... }
+  to s3("archive/$(date).json")
+}
 ```
+
+**When to use it:** any time you want to design a data flow without writing Rust. The DSL is the first thing a new user touches.
+
+**Where it breaks:** it doesn't work for complex imperative logic or for flows that carry state across executions. For those you drop down to the Rust engine directly.
+
+**Related:** feeds P2 (the engine); references P3 (connectors) by name.
+
+*Confidence high. Provenance: parser/ast/evaluator + docs/dsl-spec.md + 8 examples come from the source. Inference: the DSL looks dynamic (no type checker found), confirm. Open question: how it behaves on runtime type errors.*
 
 ## How to continue from here
 

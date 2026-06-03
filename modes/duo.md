@@ -122,40 +122,26 @@ Rules:
 
 ### Step 4 — Synthesis
 
-```
-MERGED PACKAGE:
+**Merged package: [concept]**
 
-CONCEPT:
+**The idea:** [final version] *(provenance: A / B / agreement / new)*
 
-CENTRAL PATTERN:
-  [final version + (provenance: A / B / agreement / new)]
+**The problem it solves:** [...]
 
-PROBLEM:
-  [...]
+**How it works:**
+- step 1 [(provenance)]
+- step 2 [(provenance)]
+- ...
 
-MECHANISM:
-  step 1: [(provenance)]
-  step 2: [(provenance)]
-  ...
+**An example:** [chosen example, and why; or both if they cover different cases]
 
-EXAMPLE:
-  [chosen example + why — or both if they cover different cases]
+**Where it breaks:** [if one person had it and the other didn't, mark it]
 
-COUNTER-EXAMPLE:
-  [if one person had it and the other didn't, mark it]
+**When to use it:** [agreement on when it applies]
 
-USE:
-  [agreement on when it applies]
+**In 30 seconds:** [agreed final version]
 
-30-SECOND PITCH:
-  [agreed final version]
-
-PROVENANCE BY FIELD:
-  central pattern: A (B assented after paraphrasing)
-  mechanism step 3: new (emerged in the discussion)
-  example: B (A didn't have a fresh one)
-  counter-example: A (B didn't have one)
-```
+*Provenance by field: central pattern from A (B agreed after paraphrasing); mechanism step 3 new (emerged in discussion); example from B (A didn't have a fresh one); counter-example from A (B didn't have one).*
 
 ### Step 5 — Dual validation
 

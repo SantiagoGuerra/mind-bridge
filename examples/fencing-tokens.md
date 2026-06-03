@@ -18,50 +18,27 @@ Gold-standard example of the Skill. Technical concept (distributed systems). Ser
 
 ## Long package
 
-```
-CONCEPT: Fencing tokens
+> **Fencing tokens**
+>
+> **The idea:** a stale actor can act late and cause damage.
+>
+> **The problem it solves:** a worker holding a lock can pause (GC, swap, a network partition), lose the lock without realizing it, then wake up and try to finish its operation. If the shared resource can't tell the current worker from the stale one, the stale worker overwrites the new worker's work.
+>
+> **How it works:** each authorization (a lock or a lease) hands out a number that only ever goes up. The shared resource remembers the highest number it has seen and rejects any operation that arrives with a lower one. So when a paused actor wakes up late carrying an old number, the resource turns it away.
+>
+> **An example:** Worker A gets token 41 and starts writing. A pauses for GC. The lock expires, and Worker B gets token 42 and finishes its write. A wakes up and sends its write with token 41. The resource sees 41 < 42 and rejects A.
+>
+> **Where it breaks:** it does nothing if the shared resource can't inspect and compare the tokens (say, a legacy filesystem with no versioning). It also won't help with coordination between two current actors. Tokens only protect against a stale actor waking up late.
+>
+> **Related:** distributed locks (the base problem), leases (what hands out the tokens), idempotency (a complementary approach, not the same fix), optimistic versioning (same family), stale writes (the concrete damage being prevented).
+>
+> **When to use it:** when actors can pause and a shared resource has to decide which operation to honor. It shows up in systems with leases (ZooKeeper, etcd), Kafka coordination, and master-replica setups.
+>
+> **In 30 seconds:** "A fencing token stops a stale worker from acting after it lost the lock. Every time someone gets permission they receive a rising number, and the resource only accepts operations with newer numbers. So if a paused process wakes up late, its old number is rejected."
+>
+> *Validated at the explain level. Confidence high. Source: Designing Data-Intensive Applications, ch. 8 (Kleppmann).*
 
-CENTRAL PATTERN:
-A stale actor can act late and cause damage.
-
-PROBLEM:
-A worker holding a lock can pause (GC, swap, network partition), lose the lock without realizing it, then wake up and try to continue the operation. If the shared resource cannot distinguish the current worker from the stale worker, the stale one overwrites the new worker's work.
-
-MECHANISM:
-Each authorization (lock, lease) emits a monotonically increasing token. The final resource tracks the highest token it has seen and rejects operations with lower tokens. Thus, if a paused actor wakes up late with a stale token, the final resource explicitly rejects it.
-
-EXAMPLE:
-Worker A receives token 41 and starts writing.
-Worker A pauses due to GC.
-The lock expires, Worker B receives token 42 and completes its write.
-Worker A wakes up and sends its write with token 41.
-The final resource sees 41 < 42 and rejects A's operation.
-
-COUNTER-EXAMPLE:
-Does not apply if the final resource cannot inspect and compare tokens (e.g. a legacy filesystem without versioning). Also does not apply to coordination problems between current actors — tokens only protect against stale actors waking up late.
-
-RELATIONS:
-- Distributed locks: the base problem they create.
-- Leases: the abstraction that emits the tokens.
-- Idempotency: complementary approach, does not solve the same thing.
-- Optimistic versioning: same family of patterns.
-- Stale writes: the concrete damage to prevent.
-
-USE:
-When there are actors that can pause and a shared resource that has to decide which operation to honor. Appears in systems with leases (Zookeeper, Etcd), Kafka coordination, systems with master-replica.
-
-30-SECOND PITCH:
-A fencing token prevents a stale worker from acting after losing the lock. Every time someone gets permission, they receive an increasing number; the final resource only accepts operations with newer tokens. So if a paused process wakes up late, its stale token is rejected.
-
-TARGET LEVEL: explain
-TAUGHT LEVEL: explain
-VALIDATED LEVEL: explain
-CONFIDENCE: high
-SOURCE: Designing Data-Intensive Applications, ch. 8 (Kleppmann)
-ANCHOR WORDS: distributed locks, leases, stale writes, monotonic tokens
-NEXT BRANCH: how the monotonic token is issued safely (Zookeeper sequential znodes, etcd revision number).
-STATE: validated
-```
+Behind the card, the stored entry keeps the canonical values: `TARGET LEVEL: explain · TAUGHT LEVEL: explain · VALIDATED LEVEL: explain · CONFIDENCE: high · STATE: validated`. Anchor words: distributed locks, leases, stale writes, monotonic tokens. Next branch: how the monotonic token is issued safely (ZooKeeper sequential znodes, etcd revision number).
 
 > **Note**: this package is shown in final `validated` state to serve as a gold-standard. The first output of Mode 1 would have had `VALIDATED LEVEL: pending` and `STATE: ready-for-validation`. These fields only advance after passing Mode 4, shown below.
 
@@ -93,12 +70,7 @@ Validated level: Solid Explain. Ready for Apply if the implementation branch is 
 
 ## Short version of the package
 
-```
-CONCEPT: Fencing tokens
-CENTRAL PATTERN: A stale actor can act late and cause damage.
-MECHANISM: Each authorization emits a monotonic token; the final resource rejects tokens lower than the highest seen.
-USE: Worker coordination over shared resource when there is a risk of pauses (GC, network).
-```
+> **Fencing tokens:** a stale actor can act late and cause damage. Works by handing out a rising number on each authorization, with the shared resource rejecting any number lower than the highest it has seen. Reach for it when workers coordinate over a shared resource and could pause (GC, network).
 
 ## Templates
 

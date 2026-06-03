@@ -264,47 +264,25 @@ OPTIONAL PACKAGES: P11, P12, P13
 
 ## First package to install now (P1 expanded)
 
-```
-P1. CONCEPT: Append-only event log
-
-CENTRAL PATTERN:
-The log is the ordered source of truth; the state of any consumer is a derivative of the log.
-
-PROBLEM:
-In systems with a traditional queue, when an event is consumed it is deleted. The system's state is spread across the queue, the database, and the consumers, with no single ordered source. Reconstructing what happened, replicating, or creating a new consumer from scratch is operationally expensive or impossible.
-
-MECHANISM:
-1. Producers write events to the end of the log (append).
-2. The log persists the event with its offset (ordered position).
-3. Events are never deleted by consumption; they are deleted by retention policy (time or size).
-4. Each consumer maintains its own offset and reads from wherever it wants.
-5. The state of each consumer is derivable by re-reading the log.
-
-EXAMPLE:
-A billing service receives "PaymentReceived" events from the log. One day, billing detects a bug in how it calculated commissions for the past 3 months. Since the log retains 6 months, billing deploys new code and resets its offset to 3 months back. It reprocesses all events and reconstructs its correct state. A traditional queue does not allow this: the events no longer exist.
-
-COUNTER-EXAMPLE:
-Not the right choice for request/response messaging (RPC) or for ephemeral data with no historical value (e.g. cursor positions in a collaborative UI). Also not for sensitive events where retaining history is a regulatory risk (GDPR — design explicit deletion that breaks the pure append-only guarantee).
-
-RELATIONS:
-- P2 (Key-based partitioning): the log is divided into partitions; order only within a partition.
-- P5 (Replay as first class): only possible because events are not deleted upon consumption.
-- P6 (Schema evolution): necessary because old events continue to exist.
-- P7 (Consumer idempotency): necessary because replay produces duplicates.
-- Distinguish from: traditional queue (pre-streams RabbitMQ), ephemeral pub/sub, database.
-
-USE:
-For systems where history matters, where multiple consumers derive different views, and where reprocessing is legitimate. In your marketplace: mail, billing, inventory all derive different views from the same "OrderCreated" event.
-
-30-SECOND PITCH:
-An append-only event log is a queue where nothing is deleted upon consumption. Events stay, consumers have their own pointer, and each consumer's state is a derivative of the log. That's why you can create new consumers, reprocess from the past, and maintain multiple views of the same stream without coordinating them.
-
-SOURCE:
-- From the source: log structure and offset mechanism (sections 1 and 2 of the PDF).
-- Inference: the GDPR counter-example does not appear literally; it is deduced from the pattern.
-- Translation: the PDF talks about "log records"; here they are called "events" for consistency with the user's vocabulary.
-- Double-check confirmed: model aligned with official Kafka and Kleppmann ch. 11.
-```
+> **P1. Append-only event log**
+>
+> **The idea:** the log is the ordered source of truth; any consumer's state is just a derivative of the log.
+>
+> **The problem it solves:** with a traditional queue, an event is deleted once consumed. State ends up scattered across the queue, the database, and the consumers, with no single ordered source. Reconstructing what happened, replicating, or spinning up a new consumer from scratch is expensive or impossible.
+>
+> **How it works:** producers append events to the end of the log. The log persists each event with its offset (its ordered position). Events aren't deleted on consumption, only by retention policy (time or size). Each consumer keeps its own offset and reads from wherever it wants, so its state is always derivable by re-reading the log.
+>
+> **An example:** a billing service consumes "PaymentReceived" events. One day it finds a bug in how it calculated commissions for the past three months. Since the log keeps six months, billing deploys the fix, resets its offset three months back, reprocesses, and rebuilds its correct state. A traditional queue can't do this: the events are already gone.
+>
+> **Where it breaks:** it's not the right tool for request/response messaging (RPC) or for ephemeral data with no historical value (cursor positions in a collaborative UI). And it's a poor fit for sensitive events where keeping history is a regulatory risk (GDPR, where you design explicit deletion that breaks the pure append-only guarantee).
+>
+> **Related:** P2 (key-based partitioning: order only within a partition), P5 (replay, possible only because events survive consumption), P6 (schema evolution, needed because old events linger), P7 (consumer idempotency, needed because replay produces duplicates). Distinguish it from a traditional queue (pre-streams RabbitMQ), ephemeral pub/sub, and a database.
+>
+> **When to use it:** systems where history matters, where multiple consumers derive different views, and where reprocessing is legitimate. In your marketplace, mail, billing, and inventory all derive different views from the same "OrderCreated" event.
+>
+> **In 30 seconds:** "An append-only event log is a queue where nothing is deleted on consumption. Events stay, each consumer has its own pointer, and a consumer's state is a derivative of the log. That's why you can add new consumers, reprocess from the past, and keep several views of the same stream without coordinating them."
+>
+> *Provenance: log structure and offset mechanism come from the source (sections 1 and 2 of the PDF). The GDPR counter-example is inference, not in the text. The PDF says "log records"; renamed "events" here for consistency with your vocabulary. Double-check confirmed: aligned with official Kafka docs and Kleppmann ch. 11.*
 
 ## How to continue from here
 

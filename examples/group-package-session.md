@@ -50,78 +50,66 @@ Skill (common instruction, each writes privately):
 
 ### Lucía's version (Concept Owner)
 
-```
-CENTRAL PATTERN: When we accumulate flags that no one cleans up, we lose the ability to know what our product does at any given moment.
+**The idea:** when we pile up flags that no one cleans up, we lose the ability to know what our product actually does at any given moment.
 
-MECHANISM:
-1. We launch a feature with a flag for gradual rollout.
-2. After a successful rollout, "rollout 100%" but the flag is not removed from the code.
-3. Time passes, the flag is still there, other features assume it is ON.
-4. When we want to modify the original feature, we don't know which flows are still conditioned by the flag.
+**How it works:**
+1. We launch a feature behind a flag for gradual rollout.
+2. Rollout reaches 100%, but the flag is never removed from the code.
+3. Time passes, the flag is still there, and other features start assuming it's ON.
+4. When we want to change the original feature, we don't know which flows are still conditioned by the flag.
 5. Every new product decision costs more to analyze.
 
-EXAMPLE:
-We launched "checkout v2" with a flag 8 months ago. It's been at 100% for 6, but the old "checkout v1" code is still compiling inside the else. Yesterday Sara proposed a UX change to checkout and we had to spend 2 hours analyzing whether it affected the dead v1 path.
+**An example:** we launched "checkout v2" behind a flag eight months ago. It's been at 100% for six, but the old "checkout v1" code is still compiling inside the else. Yesterday Sara proposed a UX change to checkout and we spent two hours analyzing whether it touched the dead v1 path.
 
-QUESTION: Is "feature flag debt" the same as "dead code"? I feel like it's not, but I can't articulate the difference.
-```
+**My question:** is "feature flag debt" the same as "dead code"? I feel it isn't, but I can't articulate the difference.
 
 ### Marco's version (Mechanism Builder)
 
-```
-CENTRAL PATTERN: Flags are state — and like any state, they accumulate, contradict each other, and eventually no one can reason about them.
+**The idea:** flags are state, and like any state they accumulate, contradict each other, and eventually no one can reason about them.
 
-MECHANISM:
-1. Each flag adds a logical branch in the code (if flag.X) or configuration (variant).
+**How it works:**
+1. Each flag adds a logical branch in the code (if flag.X) or a config variant.
 2. When 2 flags interact, there are 2² = 4 possible combinations.
-3. When there are N flags, there are 2^N combinations. The vast majority are never tested.
-4. When someone makes a change in code touched by a flag, they can't test all the combinations — they just assume which one is active.
-5. Bugs appear in production that only occur with a specific combination no one considered.
+3. With N flags there are 2^N combinations, and the vast majority are never tested.
+4. When someone changes code touched by a flag, they can't test every combination, so they just assume which one is active.
+5. Bugs reach production that only happen with a specific combination no one considered.
 
-EXAMPLE:
-We have ~80 active flags in backend today. Last week a bug reached production because the combination "flag_pricing_v2=on + flag_legacy_currency=on" generated a NaN price. No one tested that combination because it was "obvious they aren't used together" — and it turned out a customer activated it by accident.
+**An example:** we have about 80 active backend flags today. Last week a bug reached production because the combination "flag_pricing_v2=on + flag_legacy_currency=on" produced a NaN price. No one tested it because it was "obvious they aren't used together", and a customer turned it on by accident.
 
-QUESTION: How do we measure this without simply counting "number of active flags"? Because the real damage is the interactions, not the count.
-```
+**My question:** how do we measure this without just counting "number of active flags"? The real damage is the interactions, not the count.
 
 ### Sara's version (Example Maker)
 
-```
-CENTRAL PATTERN: The visual and behavioral inconsistency our users experience comes largely from flags that change UX by segment without coordination.
+**The idea:** much of the visual and behavioral inconsistency our users feel comes from flags that change UX by segment without coordination.
 
-MECHANISM:
+**How it works:**
 1. Each experiment or rollout introduces a flag that changes visible behavior.
 2. Different segments end up with different combinations of behaviors.
-3. When a user calls support, support can't reproduce the bug because it's in a combination that isn't documented.
-4. When I design a new flow, I can't assume all users see the same thing in the previous flow — I have to design for N variants.
-5. I lose control of how the product feels end-to-end.
+3. When a user calls support, support can't reproduce the bug because it lives in an undocumented combination.
+4. When I design a new flow, I can't assume everyone saw the same thing in the previous flow, so I have to design for N variants.
+5. I lose control of how the product feels end to end.
 
-EXAMPLE:
-I designed a new flow for subscriptions last week. The first step of the flow assumed the user saw the "Change plan" button in the header. But there's a "header_v3=off" flag for 12% of users where that button is somewhere else. I had to redesign the first step to cover both variants. Multiplied by all active flags in the product, designing coherently is almost impossible.
+**An example:** I designed a new subscriptions flow last week. The first step assumed the user saw the "Change plan" button in the header. But a "header_v3=off" flag puts that button elsewhere for 12% of users. I had to redesign the first step to cover both variants. Multiply that by every active flag and designing coherently is almost impossible.
 
-QUESTION: Does flag debt apply only to code, or also to the "UX debt" generated by live flags?
-```
+**My question:** does flag debt apply only to code, or also to the "UX debt" that live flags create?
 
 ### Diego's version (Skeptic)
 
-```
-CENTRAL PATTERN: Feature flag debt is the maintenance cost we take on by delegating product decisions to runtime conditionals.
+**The idea:** feature flag debt is the maintenance cost we take on by delegating product decisions to runtime conditionals.
 
-MECHANISM:
-1. Each flag shifts a decision that could have been in code to a configuration decision.
-2. That pays you flexibility (gradual rollout, kill switch, experimentation).
-3. But it costs you: each flag is a live surface that must be known and monitored.
-4. When flags accumulate without cleanup, the cost exceeds the original benefit.
+**How it works:**
+1. Each flag shifts a decision that could have lived in code into a configuration decision.
+2. That buys you flexibility (gradual rollout, kill switch, experimentation).
+3. But it costs you: each flag is a live surface that has to be known and monitored.
+4. When flags accumulate without cleanup, the cost outgrows the original benefit.
 5. The team ends up spending more time understanding the system than evolving it.
 
-EXAMPLE:
-The last pricing incident (NaN in production, Marco described it). But MORE important to me as EM: the last retro showed the team spends ~15% of time "reasoning about flag state before making changes". That is feature flag debt measured in team velocity, not in bugs.
+**An example:** the last pricing incident (the NaN in production Marco described). But more important to me as EM: the last retro showed the team spends about 15% of its time reasoning about flag state before making changes. That's feature flag debt measured in team velocity, not in bugs.
 
-QUESTIONS / SKEPTICISM:
-- What is the difference between "feature flag debt" and "accidental complexity in general"? I suspect we're mixing two things.
-- Is the solution eliminating flags? Or is it process/ownership/expiration? My intuition is that "fewer flags" doesn't fix it if new flags also accumulate.
-- Is it debt or is it the legitimate cost of the control that flags give us? This concerns me because it may be that we're over-romanticizing a world "without flags" that would be worse.
-```
+**My questions and skepticism:**
+- What's the difference between "feature flag debt" and "accidental complexity in general"? I suspect we're mixing two things.
+- Is the fix eliminating flags, or is it process, ownership, and expiration? My hunch is "fewer flags" doesn't help if new ones also accumulate.
+- Is it debt, or the legitimate cost of the control flags give us? This worries me; we may be over-romanticizing a world "without flags" that would be worse.
 
 ## Step 2 — Reveal and comparison
 
@@ -251,76 +239,70 @@ TURNS:
 
 ## Step 5 — Synthesis
 
-```
-SHARED PACKAGE — Feature Flag Debt
+**Shared package: feature flag debt**
 
-CONCEPT: Feature flag debt
+*Concept: feature flag debt.*
 
-CENTRAL PATTERN:
-Specific subset of accidental complexity that appears when delivery flags (rollout / experimentation) are not removed after serving their purpose, accumulating as state that multiplies combinations, demands cognitive attention, and generates visible inconsistency for the user.
-(Provenance: fusion of all 4 versions + agreement that it is a subset of accidental complexity, not equivalent.)
+**The idea:** a specific kind of accidental complexity that shows up when delivery flags (rollout, experimentation) aren't removed after they've served their purpose. They pile up as state that multiplies combinations, demands attention, and creates visible inconsistency for the user. *(Provenance: a fusion of all four versions, plus agreement that it's a subset of accidental complexity, not the same thing.)*
 
-PROBLEM:
-Delivery flags are useful for gradual rollout, experimentation, and fast rollback. But if they are not removed post-rollout, they generate 4 parallel costs: (1) dead code in unused branches, (2) combinatorial explosion with neighboring flags, (3) inconsistent UX by segment, (4) cognitive load on the team that must reason about state before any change.
-(Provenance: emerged in discussion, all 4 axes contributed by all 4 participants.)
+**The problem it solves:** delivery flags are useful for gradual rollout, experiments, and fast rollback. But if they aren't removed after rollout, they create four parallel costs: dead code in unused branches, combinatorial explosion with neighboring flags, inconsistent UX by segment, and cognitive load on the team that has to reason about state before any change. *(Provenance: emerged in discussion; all four axes contributed by all four participants.)*
 
-CRITICAL DISTINCTION — flags that ARE debt vs flags that are NOT:
-- Generate debt if not cleaned up: delivery flags (rollout, experiments).
-- Do NOT generate debt (alive by design): kill switches, compliance flags (geo/age), legitimate runtime config.
-The rule: does this flag have a "served its purpose" date? If yes and it wasn't removed, it's debt.
-(Provenance: Skeptic attack 1, incorporated.)
+**A critical distinction, flags that ARE debt vs flags that are NOT:** delivery flags (rollout, experiments) become debt if they aren't cleaned up. Kill switches, compliance flags (geo/age), and legitimate runtime config are alive by design and are not debt. The test: does this flag have a "served its purpose" date? If yes and it wasn't removed, it's debt. *(Provenance: Skeptic attack 1, incorporated.)*
 
-MECHANISM (how it accumulates and causes damage):
-1. A feature is launched with a delivery flag for gradual rollout.
-2. Rollout reaches 100% but the flag is not removed from the code.
-3. The old branch remains "alive" in code even though it is functionally unreachable.
-4. Other features are built assuming the flag is ON, but the old code keeps compiling.
-5. Implicit untested combinations appear (2^N total).
-6. The team dedicates a growing % of time to "reasoning about flag state" before changes.
-7. Bugs appear in production due to unconsidered combinations; inconsistent UX across segments.
-(Provenance: Lucía steps 1-4, Marco step 5, Diego step 6, Sara step 7.)
+**How it works** (how it accumulates and causes damage):
 
-EXAMPLES (4 axes):
-- DEAD CODE (Lucía): checkout v2 at 100% for 6 months; v1 code still compiling inside the else; UX change costs 2h of analysis.
-- COMBINATORICS (Marco): flag_pricing_v2=on + flag_legacy_currency=on → NaN in production.
-- INCONSISTENT UX (Sara): header_v3=off for 12% forces a redesign of the first step of the new flow.
-- ORGANIZATIONAL COST (Diego): ~15% of team time on "reasoning about flag state" (from recent retro).
-(Provenance: each contributed their axis; all 4 preserved because they cover different domains.)
+- A feature launches behind a delivery flag for gradual rollout.
+- Rollout hits 100%, but the flag is never removed from the code.
+- The old branch stays "alive" in code even though it's functionally unreachable.
+- Other features get built assuming the flag is ON, while the old code keeps compiling.
+- Implicit, untested combinations appear (2^N of them).
+- The team spends a growing share of its time reasoning about flag state before any change.
+- Bugs reach production from combinations no one considered, and UX drifts apart across segments.
 
-WHERE IT DOES NOT APPLY:
+*(Provenance: Lucía steps 1-4, Marco step 5, Diego step 6, Sara step 7.)*
+
+**Examples (four axes):**
+
+- Dead code (Lucía): checkout v2 at 100% for six months, with v1 still compiling in the else; a UX change costs two hours of analysis.
+- Combinatorics (Marco): flag_pricing_v2=on together with flag_legacy_currency=on produced a NaN in production.
+- Inconsistent UX (Sara): header_v3=off for 12% of users forced a redesign of the first step of the new flow.
+- Organizational cost (Diego): about 15% of team time spent reasoning about flag state, from a recent retro.
+
+*(Provenance: each contributed their axis; all four kept because they cover different domains.)*
+
+**Where it breaks:**
+
 - Active kill switches and compliance flags: alive by design, not debt.
-- Legitimate runtime config (limits, customer-facing feature toggles).
-- Actively running A/B test flags with a defined horizon.
-- Accidental complexity not derived from flags (poorly coupled deps, slow tests, etc.) — do not attribute to feature flag debt.
-(Provenance: Skeptic attack 1 + Skeptic attack 3.)
+- Legitimate runtime config (limits, customer-facing toggles).
+- A/B test flags actively running with a defined horizon.
+- Accidental complexity not caused by flags (poorly coupled deps, slow tests). Don't attribute that to feature flag debt.
 
-METRICS TO MEASURE (3 angles, not 1):
-1. **% of active flags > 90 days since rollout 100%**. Objective metric, leading indicator. (Proposed by Diego.)
-2. **% of team time reasoning about flag state**. Subjective metric, captures the real cognitive cost. Indicative, not determinative. (Refined in response to Skeptic attack 3.)
-3. **% of support incidents traced to undocumented flag combinations**. Captures user cost. (Proposed by Sara.)
-(Provenance: built collectively in Step 3.)
+*(Provenance: Skeptic attacks 1 and 3.)*
 
-HOW TO PREVENT (the solution is NOT just cleanup):
-- **TTL by flag type**: delivery → 30 days from rollout 100% → review; experiment → closing date defined from day 1.
-- **Explicit ownership**: each flag has an owner responsible for removing it.
-- **Review ritual**: once a month, sweep of expired flags.
-- **Cleanup sprint**: only if there's already an accumulated backlog; not as a permanent solution.
-(Provenance: Skeptic attack 2, incorporated.)
+**Metrics to track (three angles, not one):**
 
-USE:
-When discussing whether to prioritize a cleanup sprint, whether to create a new flag for a feature, or whether to review the flag process. Also useful for defending a proposal to "reduce the % of team time on debt" in front of stakeholders.
+- Share of active flags older than 90 days since hitting 100% rollout. Objective, a leading indicator. (Diego.)
+- Share of team time spent reasoning about flag state. Subjective, captures the real cognitive cost; indicative, not determinative. (Refined after Skeptic attack 3.)
+- Share of support incidents traced to undocumented flag combinations. Captures the user cost. (Sara.)
 
-30-SECOND PITCH:
-Feature flag debt is the accumulation of delivery flags that are not removed after serving their purpose. It generates 4 parallel costs: dead code, combinatorial explosion, inconsistent UX by segment, and cognitive load on the team. The solution is not to eliminate flags or run a cleanup sprint — it's process: TTL by flag type, explicit ownership, and a monthly review ritual. We measure it with three angles: % flags > 90 days, % of team time reasoning about flags, and incidents traced to undocumented combinations.
+*(Provenance: built collectively in Step 3.)*
 
-DECLARED WEAKNESSES:
-- None from the Skeptic round (all 3 attacks were incorporated).
+**How to prevent it (the fix is not just cleanup):**
 
-PENDING DECISIONS (linked to the package):
-- Define specific TTL by flag type (delivery / experiment / kill switch / compliance). Owner: Marco. Deadline: next Monday.
-- Produce the first report with the 3 metrics for the current state. Owner: Diego. Deadline: 2 weeks.
-- Decide in Q3 roadmap whether to run a cleanup sprint + process change or only a process change. Owner: Lucía. Deadline: after Diego's report.
-```
+- TTL by flag type: a delivery flag gets reviewed 30 days after hitting 100%; an experiment gets a closing date from day one.
+- Explicit ownership: every flag has an owner responsible for removing it.
+- A review ritual: a monthly sweep of expired flags.
+- A cleanup sprint: only if a backlog has already built up, not as a permanent solution.
+
+*(Provenance: Skeptic attack 2, incorporated.)*
+
+**When to use it:** when deciding whether to prioritize a cleanup sprint, whether to add a new flag for a feature, or whether to revisit the flag process. Also handy for defending a proposal to cut the share of team time spent on debt in front of stakeholders.
+
+**In 30 seconds:** "Feature flag debt is the build-up of delivery flags that never get removed after serving their purpose. It creates four parallel costs: dead code, combinatorial explosion, inconsistent UX by segment, and cognitive load on the team. The fix isn't to ban flags or run a cleanup sprint, it's process: TTL by flag type, explicit ownership, and a monthly review ritual. We measure it three ways: share of flags over 90 days, share of team time spent reasoning about flags, and incidents traced to undocumented combinations."
+
+*Declared weaknesses: none from the Skeptic round; all three attacks were incorporated.*
+
+*Pending decisions: define specific TTL by flag type (delivery / experiment / kill switch / compliance), owner Marco, due next Monday; produce the first report with the three metrics for the current state, owner Diego, due in two weeks; decide in the Q3 roadmap whether to run a cleanup sprint plus a process change or only a process change, owner Lucía, due after Diego's report.*
 
 ## Step 6 — Group validation
 

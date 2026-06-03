@@ -32,35 +32,29 @@ Skill (private message to each, in parallel):
 
 ### Ana's version
 
-```
-CENTRAL PATTERN: Different replicas can hold different values temporarily, but all converge to the same state if there are no new writes.
+**The idea:** different replicas can hold different values temporarily, but they all converge to the same state if no new writes arrive.
 
-MECHANISM:
-1. A write arrives at a replica (primary or any).
+**How it works:**
+1. A write arrives at a replica (the primary, or any).
 2. The replica accepts the write and responds to the client.
 3. The write propagates to the rest in the background.
-4. Until propagation completes, reads on different replicas may see different versions.
+4. Until propagation finishes, reads on different replicas can see different versions.
 5. If no new writes arrive, all replicas eventually reach the same state.
 
-CATALOG EXAMPLE:
-A seller updates a product's price. The write goes to the EU replica. Before it propagates to US, a user in US loads the product and sees the old price. 200ms later it propagates; subsequent loads in US see the new price.
-```
+**An example (catalog):** a seller updates a product price. The write goes to the EU replica. Before it propagates to the US, a user in the US loads the product and sees the old price. About 200ms later it propagates, and later loads in the US see the new price.
 
 ### Bruno's version
 
-```
-CENTRAL PATTERN: The system gives up on immediate consistency to gain availability and latency; eventually everything aligns.
+**The idea:** the system gives up immediate consistency to gain availability and latency; eventually everything lines up.
 
-MECHANISM:
+**How it works:**
 1. Writes are accepted at any available node (multi-master).
-2. Each node stores the version with a timestamp / vector clock.
-3. Versions are synchronized asynchronously between nodes.
-4. When two nodes diverge on the same record, it is resolved with a rule (last-write-wins, CRDT, custom merge).
-5. After a "sufficient" amount of time with no writes, all nodes agree.
+2. Each node stores the version with a timestamp or vector clock.
+3. Versions sync asynchronously between nodes.
+4. When two nodes diverge on the same record, a rule resolves it (last-write-wins, CRDT, custom merge).
+5. After "enough" time with no writes, all nodes agree.
 
-CATALOG EXAMPLE:
-If a seller in EU updates the price and an admin in US updates it at the same second, the two changes arrive at different nodes. When they synchronize, the system has to decide which one wins — and that is bug-prone if we don't define it well.
-```
+**An example (catalog):** if a seller in the EU updates the price and an admin in the US updates it in the same second, the two changes land on different nodes. When they sync, the system has to decide which one wins, and that's bug-prone if we haven't defined it well.
 
 ## Step 2 — Reveal and comparison
 
@@ -133,62 +127,46 @@ Skill continues:
 
 Skill produces the final package:
 
-```
-MERGED PACKAGE — Eventual consistency in the catalog
+**Merged package: eventual consistency in the catalog**
 
-CONCEPT: Eventual consistency applied to single-master with read replicas
+*Concept: eventual consistency applied to a single-master setup with read replicas.*
 
-CENTRAL PATTERN:
-Read replicas may show stale data briefly; we accept that staleness to lower read latency and reduce load on the primary. (Provenance: agreement, fusion of both versions — Ana's behavior + Bruno's tradeoff.)
+**The idea:** read replicas may show stale data briefly; we accept that staleness to lower read latency and ease load on the primary. *(Provenance: agreement, a fusion of both versions, Ana's behavior view plus Bruno's tradeoff view.)*
 
-PROBLEM:
-Without read replicas, all reads hit the primary → latency + saturation. With read replicas, the system scales reads but replicas are not perfectly synchronized. The question is: how much staleness is acceptable for the catalog case? (Provenance: emerged in discussion.)
+**The problem it solves:** without read replicas every read hits the primary, which means latency and saturation. With read replicas the system scales reads, but the replicas aren't perfectly in sync. The real question for the catalog: how much staleness is acceptable? *(Provenance: emerged in discussion.)*
 
-MECHANISM (single-master Postgres with read replicas):
-1. Write arrives at the primary, committed to main Postgres. (Provenance: Ana step 1+2.)
-2. The primary responds to the client with commit. (Ana.)
-3. The primary sends WAL to replicas asynchronously (logical or streaming replication). (Ana step 3.)
-4. Replicas apply the WAL; lag depends on load + network. (Ana step 4, refined by Bruno.)
-5. Until the WAL arrives and is applied, reads on a replica may see an old version. (Ana step 4.)
-6. After the lag, the replica converges to the newest version. (Ana step 5.)
+**How it works** (single-master Postgres with read replicas):
 
-EXAMPLE (from the catalog):
-Seller in EU updates a product's price at 14:00:00. Write goes to primary (EU-1), commit OK. Read replica in US-1 receives the WAL ~150ms later and applies it ~50ms after that. Total: ~200ms window in which a user in US may see the old price. (Provenance: Ana, validated by Bruno as representative of the current setup.)
+- A write reaches the primary and commits to main Postgres. *(Ana, steps 1-2.)*
+- The primary responds to the client with the commit. *(Ana.)*
+- The primary ships WAL to the replicas asynchronously, logical or streaming replication. *(Ana, step 3.)*
+- Replicas apply the WAL; the lag depends on load and network. *(Ana step 4, refined by Bruno.)*
+- Until the WAL arrives and is applied, a read on a replica can see an old version. *(Ana, step 4.)*
+- After the lag, the replica converges to the newest version. *(Ana, step 5.)*
 
-COUNTER-EXAMPLE / WHERE IT DOES NOT APPLY:
-- Does not apply to writes: any write must go to the primary. Eventual consistency lives only in the read path.
-- Does not apply to operations requiring "read your own write" in real time (e.g. seller updates price and refreshes their own view). For that case, read is forced to primary or sticky session to primary.
-- Does not apply to the multi-master model with concurrent conflicts (Bruno mentioned this; we leave it as an unopened branch — does not apply to the current catalog).
+**An example (from the catalog):** a seller in the EU updates a product price at 14:00:00. The write goes to the primary (EU-1), commit OK. A read replica in US-1 receives the WAL about 150ms later and applies it about 50ms after that, so there's a roughly 200ms window where a user in the US can still see the old price. *(Provenance: Ana, validated by Bruno as representative of the current setup.)*
 
-RELATIONS:
-- Synchronous vs async replication: this is async; synchronous would give strong consistency but kills latency.
-- CAP theorem: under network partition, AP (availability + partition tolerance), not CP.
-- Read-after-write consistency: the concrete operational problem to design against.
-- Multi-master / CRDTs: unopened branch for your current architecture.
+**Where it breaks:**
 
-USE:
-- Catalog reads in the hot path (product page, search, listing): accept staleness ≤ a few seconds.
-- Reads that the seller themselves makes of their just-edited product: force primary or wait for visible confirmation.
-- Reads for checkout / payment: pending definition (Pending Decision below).
+- Not for writes: every write must go to the primary. Eventual consistency lives only in the read path.
+- Not for operations that need read-your-own-write in real time (a seller updates a price, then refreshes their own view). There the read is forced to the primary, or pinned with a sticky session.
+- Not for the multi-master model with concurrent conflicts (Bruno raised it; left as an unopened branch, it doesn't apply to the current catalog).
 
-30-SECOND PITCH (agreed):
-We have the catalog in Postgres single-master with read replicas. Reads hit replicas to lower latency, but replicas run ~200ms behind the primary. We accept that staleness in the hot path. What we cannot accept staleness for: the seller's read-your-own-write, and what we're deciding today is whether checkout can or cannot.
+**Related:** synchronous vs async replication (this is async; synchronous would give strong consistency but kill latency), the CAP theorem (under a partition this is AP, not CP), read-after-write consistency (the concrete operational problem to design against), and multi-master / CRDTs (an unopened branch for the current architecture).
 
-PROVENANCE BY FIELD:
-  central pattern: agreement after discussion (fusion of the two focuses).
-  problem: emerged in discussion.
-  mechanism: Ana, refined with WAL detail by Bruno.
-  example: Ana, validated by Bruno.
-  counter-example: Bruno's multi-master branch was marked "does not apply here" — useful for the future.
-  use: agreement.
+**When to use it:**
 
-PENDING DECISIONS:
-  - Does checkout / payment read from replicas or from primary? — requires looking at the "add to cart" flow to decide if staleness can cause stock overbooking.
-  - What is the acceptable lag SLA we monitor? — define metric.
+- Catalog reads in the hot path (product page, search, listing): accept staleness of up to a few seconds.
+- A seller's read of the product they just edited: force the primary, or wait for a visible confirmation.
+- Reads for checkout / payment: still to be decided (see pending decisions).
 
-DECLARED WEAKNESSES:
-  - We don't measure the current replica lag; the "~200ms" is an estimate, not data.
-```
+**In 30 seconds (agreed):** "We run the catalog on single-master Postgres with read replicas. Reads hit the replicas to lower latency, but the replicas run about 200ms behind the primary. We accept that staleness in the hot path. What we can't accept staleness for is the seller's read-your-own-write, and what we're deciding today is whether checkout can."
+
+*Provenance by field: central pattern from agreement after discussion (a fusion of the two focuses); problem emerged in discussion; mechanism from Ana, refined with WAL detail by Bruno; example from Ana, validated by Bruno; counter-example from Bruno's multi-master branch, marked "doesn't apply here" but useful later; use from agreement.*
+
+*Pending decisions: does checkout/payment read from replicas or from the primary? (Needs a look at the add-to-cart flow to see if staleness can cause stock overbooking.) And what acceptable lag SLA do we monitor? (Define the metric.)*
+
+*Declared weaknesses: we don't currently measure replica lag; the "~200ms" is an estimate, not data.*
 
 ## Step 5 — Dual validation
 

@@ -19,17 +19,14 @@
 
 **Skill** (compact output):
 
-CONCEPT: Fencing tokens
-CENTRAL PATTERN: A late actor can act after losing authority and cause damage.
-MECHANISM: Each lock acquisition increments a monotonic token; downstream operations reject any token lower than what they've seen.
-EXAMPLE: Process A holds lock with token=7, GC-pauses; process B acquires lock with token=8 and writes; A wakes and tries to write with token=7 → storage rejects.
-USE: Distributed locks where the protected resource itself can verify the token.
+> **Fencing tokens**
+> **The idea:** a late actor can act after losing its authority and cause damage.
+> **How it works:** each lock acquisition bumps a number that only goes up; later operations reject any number lower than the highest one seen.
+> **An example:** A holds the lock with token 7 and GC-pauses. B takes the lock with token 8 and writes. A wakes and tries to write with token 7; storage rejects it.
+> **When to use it:** distributed locks where the protected resource can check the number itself.
+> *Taught at the explain level, not yet validated (ready-for-validation).*
 
-TAUGHT LEVEL: explain
-VALIDATED LEVEL: pending
-STATE: ready-for-validation
-
-> 5 fields total. No 5-question intake. Defaults declared: `goal=understand, level=explain, success=explain in 30s`.
+> Compact card, no 5-question intake. Defaults declared: `goal=understand, level=explain, success=explain in 30s`.
 
 ---
 
@@ -39,14 +36,13 @@ STATE: ready-for-validation
 
 **Skill** (compact output):
 
-CONCEPT: Idempotency in payment processing
-CENTRAL PATTERN: Same request applied N times produces the same effect as applying it once.
-MECHANISM: Client generates an idempotency key per intent; server records (key → result) for a TTL; duplicate keys return the cached result instead of re-executing.
-EXAMPLE: Stripe's `Idempotency-Key` header on POST /charges — retrying with the same key returns the original charge object.
-COUNTER-EXAMPLE: A request that mutates external state without keying (e.g., POST without an idempotency key over a flaky network) double-charges on retry.
-USE: Any POST/PUT/PATCH over an unreliable channel where the client must safely retry.
-
-STATE: packaged
+> **Idempotency in payment processing**
+> **The idea:** the same request applied many times has the same effect as applying it once.
+> **How it works:** the client attaches an idempotency key per intent; the server stores key-to-result for a TTL and returns the cached result for duplicate keys instead of running again.
+> **An example:** Stripe's `Idempotency-Key` header on POST /charges. Retrying with the same key returns the original charge object.
+> **Where it breaks:** a request that changes external state with no key (a POST over a flaky network) double-charges on retry.
+> **When to use it:** any POST/PUT/PATCH over an unreliable channel where the client must retry safely.
+> *Packaged, not taught interactively, so not installed.*
 
 > No interactive teaching happened — `packaged`, not `installed`. To promote to `installed`, run Mode 4.
 

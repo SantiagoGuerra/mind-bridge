@@ -46,11 +46,11 @@ A concept package is what stays in your head a week later, once you really under
 >
 > - **The idea:** past a point, each extra hour of effort buys less than the hour before it.
 > - **The problem it solves:** you keep pouring time into something long after it stopped paying off.
-> - **Why it works:** the cheap, high-impact gains get used up first, so what's left costs more and gives back less.
+> - **How it works:** the cheap, high-impact gains get used up first, so what's left costs more and gives back less.
 > - **An example:** studying for an exam. The first three hours move your grade a lot. The tenth barely moves it.
 > - **Where it breaks:** when effort compounds. An instrument pays off slowly at first, then more and more.
-> - **When to reach for it:** deciding whether "good enough" is actually enough, so you can stop.
-> - **In one breath:** "Effort and results aren't a straight trade. Early effort pays off big, later effort pays off less. The trick is noticing when you've crossed into the 'less' part, and stopping."
+> - **When to use it:** deciding whether "good enough" is actually enough, so you can stop.
+> - **In 30 seconds:** "Effort and results aren't a straight trade. Early effort pays off big, later effort pays off less. The trick is noticing when you've crossed into the 'less' part, and stopping."
 
 Notice the "where it breaks" line. Knowing where an idea stops applying is often how you find out whether you really understand it.
 
@@ -192,7 +192,7 @@ It works in two languages. It replies in whatever language you write in, and it 
 
 ## Status
 
-mind-bridge is at **v1.2.0**: stable, and tested.
+mind-bridge is at **v1.3.0**: stable, and tested.
 
 ---
 

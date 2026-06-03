@@ -57,47 +57,27 @@ User: "They probably wouldn't speak up unless someone asked. And the senior woul
 
 ## Package (natural step — Mode 2)
 
-```
-CONCEPT: Information collapse by authority (provisional name — search for standard term in literature)
+> **Information collapse by authority** *(provisional name, standard term still to be found in the literature)*
+>
+> **The idea:** when a decision is ambiguous and there's no external evidence, rank takes the place of argument, and the local knowledge of the lower-ranked person is quietly lost.
+>
+> **The problem it solves:** in decisions where information is spread out (juniors with local knowledge, seniors with the wide view), the group collapses toward the most authoritative voice. The junior doesn't volunteer. The senior doesn't ask. Nobody notices the loss, because there's no visible artifact.
+>
+> **How it works:** the decision is ambiguous, with no clear evidence. The setting rewards speed. The most authoritative voice fills the gap. Voices with local information hold back by default. The decision gets made without the distributed knowledge, and no record remains of what was lost.
+>
+> **An example:** in architecture planning, a module migration is proposed. The senior decides in ten minutes on a general read. A junior worked in that module last month and knows it hides a critical dependency. They stay quiet, because "the senior already decided" and they don't want to seem like they're pushing back. Three weeks later, the migration uncovers the problem.
+>
+> **Where it breaks:** it doesn't apply in code review (there's an artifact). It doesn't apply when the data is shared before deciding. And it doesn't apply where explicit challenge is built in, like reviews with a formal red team.
+>
+> **Related:** authority bias from social psychology (the family it belongs to), information cascades (one voice silencing the next), the HiPPO effect or highest-paid-person's-opinion (a workplace special case), and psychological safety (the condition that breaks the pattern). *These are possible anchors, verify before publication.*
+>
+> **When to use it:** design decisions where information is spread out. The countermoves: ask for evidence, slow the decision down, have the junior speak first, and separate opinions from information.
+>
+> **In 30 seconds:** "When a decision is ambiguous and there's no clear evidence, rank weighs more than argument. The authoritative voice fills the gap, the people with local knowledge stay quiet, and the decision gets made without the best information. Nobody sees the loss, because no artifact is left behind."
+>
+> *Packaged from a decompressed intuition, not formally taught yet, so nothing is validated. Target level: explain. It still needs checking against the literature (Cialdini on authority bias, Edmondson on psychological safety) before it can move past `ready-for-validation` to `installed` or `validated`.*
 
-CENTRAL PATTERN:
-When the decision is ambiguous and there is no external evidence, rank substitutes for argument — and the local information of the lower rank is silently lost.
-
-PROBLEM:
-In decisions where information is distributed (juniors with local knowledge, seniors with global vision), the system collapses toward the most authoritative voice. The junior doesn't volunteer. The senior doesn't ask. Nobody notices the loss because there is no visible artifact.
-
-MECHANISM:
-1. The decision is ambiguous (no clear evidence).
-2. The system rewards speed.
-3. The most authoritative voice fills the vacuum.
-4. Voices with local information are inhibited by default.
-5. The decision is made without the distributed information.
-6. No record remains of what was lost.
-
-EXAMPLE:
-Architecture planning: a module migration is proposed. The senior decides in 10 minutes based on their general read. A junior worked in that module last month and knows it has a critical hidden dependency. They don't speak up because "the senior already decided" and "they don't want to seem like they're pushing back". Three weeks later, the migration uncovers the problem.
-
-COUNTER-EXAMPLE:
-Does not apply in code review (there is an artifact). Does not apply when data is shared before deciding. Does not apply in cultures where explicit challenge is institutionalized (e.g. tech reviews with formal red team).
-
-RELATIONS:
-- Authority bias (social psychology): the conceptual family.
-- Information cascades: when one voice silences the next ones.
-- HiPPO effect (highest paid person's opinion): particular case in companies.
-- Psychological safety: the condition that breaks the pattern.
-
-USE:
-Design decisions where information is distributed: force evidence, slow down the decision, have the junior speak first, separate opinions from information.
-
-30-SECOND PITCH:
-When a decision is ambiguous and there is no clear evidence, rank weighs more than argument. The authoritative voice fills the vacuum, those with local information stay quiet, and the decision is made without the best information. Nobody sees the loss because no artifact remains.
-
-ANCHOR WORDS: authority bias, information cascade, HiPPO effect, psychological safety, distributed information.
-TARGET LEVEL: explain
-TAUGHT LEVEL: pending (intuition decompressed, no formal teaching yet)
-VALIDATED LEVEL: pending
-STATE: packaged (needs validation against literature: Cialdini, Edmondson) → ready-for-validation (after Mode 1) → installed (only after Mode 4) → validated.
-```
+Behind the card, the stored entry keeps: `TARGET LEVEL: explain · TAUGHT LEVEL: pending · VALIDATED LEVEL: pending · STATE: packaged`. Anchor words: authority bias, information cascade, HiPPO effect, psychological safety, distributed information. State path from here: `packaged` → `ready-for-validation` (after Mode 1) → `installed` (only after Mode 4) → `validated`.
 
 ## Flags during decompression
 

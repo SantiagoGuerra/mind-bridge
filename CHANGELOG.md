@@ -18,6 +18,27 @@ Older entries below describe the state at the time. Refer to this section if a n
 
 ---
 
+## v1.3.0 — Concept packages render as readable cards (2026-05-29)
+
+The biggest presentation change since the rewrite. When the user is in a session, a concept package no longer prints as a rigid `LABEL: value` block. It renders as a readable card with soft labels and a plain-language status line, while keeping the same underlying parts.
+
+### Changed
+- **`templates/concept-package.md`** (canonical): the default output is now a card. Soft labels (the idea / the problem it solves / how it works / an example / where it breaks / related / when to use it / in 30 seconds) plus a plain-language status line that carries level and state. The state machine, the anti-false-mastery rule, and the short 3-line form are unchanged.
+- **All gold-standard examples** rewritten to the card: `fencing-tokens`, `invisible-product-debt`, `raw-intuition`, `QUICKSTART`, the P1 expansions in `external-content-roadmap` / `clrs-book-roadmap` / `repo-discovery-example`, and the intake drafts plus merged packages in `duo-sync-session` and `group-package-session`.
+- **Collaborative package templates** in `modes/duo.md` and `templates/collaboration-modes.md` updated to the card.
+- README example card aligned to the same labels.
+
+### Unchanged on purpose
+- The **library storage format** (`templates/library-entry.md`) keeps the canonical field names plus YAML frontmatter. It is what gets saved to disk, not what the user reads in a session.
+- **Comparison matrices** in Duo/Group sessions stay structured. They are side-by-side diffs, clearer as a table than as prose.
+- The **meeting-prep** structure and the **marked-simplification** block are different artifacts and keep their own shape.
+
+### Verified
+- `scripts/lint.sh`: PASS.
+- `scripts/release.sh`: PASS.
+
+---
+
 ## v1.2.0 — Softer package presentation + large-roadmap handling (2026-05-29)
 
 Refinements after the first public release. No change to the concept-package schema or the mode router.
